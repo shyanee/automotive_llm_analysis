@@ -1,0 +1,16 @@
+dotenv
+
+pandas
+openpyxl
+plotly
+scikit-learn
+
+jinja2
+markdown
+pyyaml
+
+google-genai
+
+# LLM
+# llama-cpp-python
+# huggingface_hub

@@ -122,32 +122,25 @@ class DataPreprocessor:
             """
             Calculates year-over-year sales volume and price trends for the top N items in a category.
             """
-            # 1. Identify top N performers in the category across all years
             top_items = df.groupby(group_col)['sales_volume'].sum().nlargest(n_top).index.tolist()
-            
             results = {}
             for item in top_items:
                 item_df = df[df[group_col] == item]
-                
                 # Group by year for the selected item
                 yearly_data = item_df.groupby('year').agg(
                     sales_volume=('sales_volume', 'sum'),
                     avg_price=('price_usd', 'mean')
                 ).sort_index()
-                
                 if yearly_data.empty:
                     continue
-
                 yearly_data_str = " | ".join([
                     f"Y{year}: S{sales:,.0f}/P${price:,.0f}"
                     for year, (sales, price) in yearly_data.iterrows()
                 ])
-                
                 # Calculate the growth rate for the whole period for the item
                 growth_rate = 0
                 if len(yearly_data) > 1 and yearly_data['sales_volume'].iloc[0] > 0:
                      growth_rate = (yearly_data['sales_volume'].iloc[-1] / yearly_data['sales_volume'].iloc[0]) - 1
-                
                 results[item] = {
                     'trend_summary': f"Growth: {growth_rate:+.2%} | Start_Year_Price: ${yearly_data['avg_price'].iloc[0]:,.0f} | End_Year_Price: ${yearly_data['avg_price'].iloc[-1]:,.0f}",
                     'yearly_breakdown': yearly_data_str
@@ -218,10 +211,10 @@ class DataPreprocessor:
         fuel_trends = _get_time_series_trends(df, 'fuel_type', n_top=4)
         transmission_trends = _get_time_series_trends(df, 'transmission', n_top=2)
         
-        # NEW: Temporal trend for BINNED Engine Size
+        # Temporal trend for BINNED Engine Size
         engine_size_trends = _get_time_series_trends(df, 'engine_size', n_top=3) 
 
-        # NEW: Categorical Price/Sales Stats
+        # Categorical Price/Sales Stats
         model_price_sales = _get_column_stats(df, 'price_usd', ['model'])
         model_sales_volume = _get_column_stats(df, 'sales_volume', ['model'])
         
@@ -254,7 +247,7 @@ class DataPreprocessor:
         context_str = (
             f"***COMPREHENSIVE VEHICLE SALES DATA CONTEXT***\n\n"
             
-            f"## 📊 Global Performance Summary\n"
+            f"## Global Performance Summary\n"
             f"--- \n"
             f"* **Total Revenue:** ${total_revenue:,.2f}\n"
             f"* **Total Sales Volume:** {total_sales:,} units\n"
@@ -270,7 +263,7 @@ class DataPreprocessor:
             f"* **Top 3 Colors:** {', '.join([f'{c} ({s:,})' for c, s in top_colors.items()])}\n"
             
             f"--- \n"
-            f"## 💰 Price & Mileage Dynamics\n"
+            f"## Price & Mileage Dynamics\n"
             f"--- \n"
             f"### Overall Numerical Variable Statistics\n"
             f"* **Price (USD) Stats:** Mean: ${price_stats.get('mean', 'N/A')}, Median: ${price_stats.get('median', 'N/A')}, Min: ${price_stats.get('min', 'N/A')}, Max: ${price_stats.get('max', 'N/A')}, IQR: ${price_stats.get('25%', 'N/A')} - ${price_stats.get('75%', 'N/A')}\n"

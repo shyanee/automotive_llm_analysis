@@ -96,7 +96,7 @@ def main():
     
     if SYSARG == 'test':
         print(data_summary)
-        print('\nNot generating report')
+        print('Not generating report')
     else:
         # STAGE 4: LLM NARRATIVE GENERATION
         logger.info("STAGE 4: Generating narrative with LLM")
@@ -105,7 +105,7 @@ def main():
             report_narrative = llm.generate_report_narrative(data_summary)
             # print(report_narrative)
             logger.info(f"Generated narrative: {len(report_narrative)} characters")
-            # logger.debug(f"Narrative preview: {report_narrative[:200]}...")
+            logger.debug(f"Narrative preview: {report_narrative[:200]}...")
         except Exception as e:
             logger.error(f"LLM generation failed: {e}", exc_info=True)
             sys.exit(1)

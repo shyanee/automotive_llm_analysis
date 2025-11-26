@@ -47,7 +47,7 @@ class Visualizer:
             x='year', 
             y='sales_volume', 
             color='region', 
-            title='1. Sales Trends: Regional Performance Overlaid with Global Trend (Units)', 
+            title='Sales Trends: Regional Performance Overlaid with Global Trend (Units)', 
             markers=True,
             labels={'sales_volume': 'Sales Volume'},
             category_orders={'region': region_order},
@@ -76,7 +76,7 @@ class Visualizer:
             y='sales_volume', 
             color='fuel_type',
             facet_col='year',
-            title='3. Top 10 Models: Sales Volume Composition by Fuel Type', 
+            title='Top 10 Models: Sales Volume Composition by Fuel Type', 
             labels={'sales_volume': 'Total Sales Volume (Units)', 'fuel_type': 'Fuel Type'},
             category_orders={"model": model_order}, # Apply the sales-based order
             hover_data=['fuel_type', 'sales_volume']
@@ -103,7 +103,7 @@ class Visualizer:
             size='total_sales_volume',       # Size now reflects sales volume (or use avg_engine_size)
             size_max=45,                     # Adjust max size slightly for clarity
             hover_data=['avg_engine_size'], # Show model and engine size on hover # model
-            title='4. Price vs. Sales Volume: Model Market Position (Aggregated by Fuel/Trans)',
+            title='Price vs. Sales Volume: Model Market Position (Aggregated by Fuel/Trans)',
             labels={
                 'avg_price_usd': 'Average Price (USD)', 
                 'total_sales_volume': 'Total Sales Volume (Units)',
@@ -122,7 +122,7 @@ class Visualizer:
         fig4 = px.box(
             df_clean_eng, x='engine_size', y='price_usd', 
             color='fuel_type', 
-            title='5. Price Distribution by Binned Engine Size and Fuel Type',
+            title='Price Distribution by Binned Engine Size and Fuel Type',
             labels={'engine_size': 'Engine Size (L, Binned)', 'price_usd': 'Price (USD)'},
             category_orders={'engine_size': sorted(df_clean_eng['engine_size'].unique().tolist())}
         )

@@ -63,7 +63,7 @@ class Visualizer:
         plots['combined_trend_plot'] = pio.to_html(fig1, full_html=False, include_plotlyjs='cdn')
         self._write_html(fig1, 'combined_trend_plot')
 
-        # 3. Top Models Sales Breakdown (New: Model Performance)
+        # 2. Top Models Sales Breakdown (New: Model Performance)
         # Goal: Highlight top-performing and underperforming models
         # 1. Identify Top 10 Models
         top_10_models = self.df.groupby('model')['sales_volume'].sum().nlargest(10).index.tolist()
@@ -85,7 +85,7 @@ class Visualizer:
         plots['top_models_plot'] = pio.to_html(fig2, full_html=False, include_plotlyjs=False)
         self._write_html(fig2, 'top_models_plot')
         
-        # 4. Price Elasticity / Sales Driver (Scatter Plot, Modified for Clarity)
+        # 3. Price Elasticity / Sales Driver (Scatter Plot, Modified for Clarity)
         # Goal: Explore key drivers of sales (price, market segment)
         # Use mileage bin as an interesting categorical variable
         group_cols = ['transmission', 'fuel_type'] # model
@@ -116,7 +116,7 @@ class Visualizer:
         plots['price_elasticity_plot'] = pio.to_html(fig3, full_html=False, include_plotlyjs=False)
         self._write_html(fig3, 'price_elasticity_plot')
 
-        # 5. Engine Size vs. Price by Fuel Type (New: Creative Insight - Premiumization/Market Segment)
+        # 4. Engine Size vs. Price by Fuel Type (New: Creative Insight - Premiumization/Market Segment)
         # Goal: Include 1-2 additional insights (Engine Size/Fuel as proxy for performance/premium segment)
         df_clean_eng = self.df.dropna(subset=['engine_size_l', 'price_usd', 'fuel_type'])
         fig4 = px.box(

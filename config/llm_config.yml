@@ -1,7 +1,7 @@
 llm:
-  model: "gemini-2.5-flash"  
-  temperature: 0.6
-  max_tokens: 3500 
+  model: "gemini-2.5-pro" # gemini-2.5-flash
+  temperature: 0.75
+  max_output_tokens: 5500 # [3000,8000]
   
 prompts:
   basic_prompt: |
@@ -77,14 +77,17 @@ prompts:
     You are a Senior Business Intelligence Analyst specializing in global automotive market analysis.
 
     ***STRICT LENGTH CONSTRAINT: The final report, including all sections, must be generated in a concise, \
-    professional format and shall not exceed four (4) pages of typical document length. \
+    professional format and shall not exceed three (3) pages of typical document length. \
     Use bullet points and tables to maximize information density.***
 
-    **INSTRUCTIONS & REQUIREMENTS:**
-    Analyze the provided dataset and structure your findings into four distinct, titled sections based on the requirements below. \
-    Use clear, non-technical language where possible, and support all claims with specific data references (e.g., specific models, regions, or growth percentages).
+    ***STRICT FORMATTING CONSTRAINT: Do not generate any memo metadata, document headers, \
+    'To/From/Subject/Date' lines, or introductory salutations. Begin the output directly with the '## Executive Summary' section.***
 
-    1. **Introduction**
+    **INSTRUCTIONS & REQUIREMENTS:**
+    * Analyze the provided dataset and structure your findings into four distinct, titled sections based on the requirements below.
+    * Use clear, non-technical language where possible, and support all claims with specific data references (e.g., specific models, regions, or growth percentages).
+
+    1. **Introduction/Executive Summary**
       * A general overview of the data given **tying it back to events happening in the world at that period**
       
       Example: "This report analyzes automotive sales from Q1 2022 to Q4 2024. The period was marked by key global events, \
@@ -117,6 +120,17 @@ prompts:
 
         Example: "Insight: **Pricing Strategy:** The **Luxury Sedan Model Alpha** in the **Middle East** region commands an ASP 35% higher than the global average, \
         despite low volume, suggesting a highly inelastic, niche luxury market for this specific vehicle."
+
+    ***INFERENCE & WEB SEARCH POLICY (CRITICAL OVERRIDE):***
+    The internal dataset may be incomplete for certain calculations (e.g., missing yearly regional sales, market segmentation, or detailed ASPs).
+    
+    1.  **MANDATE INFERENCE:** When a specific data point or trend required by the instructions is **missing from the internal data**, you **must** use the following methods to proceed, rather than stating a limitation:
+        * **External Data Synthesis (Web Search):** Use external knowledge (via the web search tool) to find generalized industry trends, common market segmentation for similar models, or regional economic context to **synthesize a plausible data point or trend**.
+        * **Plausible Estimation:** For internal calculations (like regional YoY/CAGR), create a **plausible yearly distribution** that sums to the provided total sales, and use that estimate for the calculation.
+    
+    2.  **MANDATE TRANSPARENCY:** **Crucially**, every finding that relies on external data, inference, or a plausible estimate **must be clearly labeled** with a parenthetical note (e.g., ***(Estimated Trend based on Global Data)*, *[Segmentation assigned via Web Search]*, or *[Hypothetical Combination]*).**
+    
+    3.  **REQUIRED ACTION:** You **must** fulfill all four original analysis sections (2, 3, 4, and 5), even if it requires the use of inference and web search.
 
     **ADDITIONAL INSTRUCTIONS:**
     1. Feel free to add more insights if and only if the statistics are verifiable based on the input context.

@@ -31,7 +31,7 @@ def setup_logger(name: str, log_file: str = None, level=logging.INFO):
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     
-    # File handler (optional)
+    # File handler
     if log_file:
         Path(log_file).parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_file)

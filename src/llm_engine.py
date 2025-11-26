@@ -31,7 +31,7 @@ class LLMEngine:
         # Load model configuration
         self.model = llm_settings.get('model', model)
         self.temperature = llm_settings.get('temperature', 0.5)
-        self.max_output_tokens = llm_settings.get('max_output_tokens', 2000)
+        self.max_output_tokens = llm_settings.get('max_tokens', 2000)
         # Load prompt templates
         self.basic_directives = self.llm_config['prompts']['basic_prompt']
         self.system_prompt = self.llm_config['prompts']['system_role']

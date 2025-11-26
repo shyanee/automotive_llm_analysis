@@ -3,11 +3,20 @@
 set -e  # Exit on error
 set -o pipefail
 
-uv venv venv
+# Initialise venv
+if [ ! -d "venv" ]; then
+    uv venv venv
+fi
+
 . venv/bin/activate
 
-echo "Upgrading pip..."
-uv pip install --upgrade pip setuptools wheel
+# Install package dependencies
+echo "Installing package dependencies"
 uv pip install -r requirements.txt
+# uv pip sync requirements.txt
 
+# LLM
 uv pip install -q -U google-genai
+
+# Create .env
+[ ! -f .env ] && echo "GOOGLE_API_KEY=" > .env || true

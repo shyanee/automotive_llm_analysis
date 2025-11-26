@@ -11,6 +11,7 @@ from src.visualiser import Visualizer
 from src.llm_engine import LLMEngine
 from src.report_builder import ReportBuilder
 
+SYSARG = sys.argv[-1]
 
 def main():
     """
@@ -93,59 +94,63 @@ def main():
         logger.error(f"Visualization generation failed: {e}", exc_info=True)
         sys.exit(1)
     
-    # # STAGE 4: LLM NARRATIVE GENERATION
-    # logger.info("STAGE 4: Generating narrative with LLM")
-    # try:
-    #     llm = LLMEngine(config_path="config/llm_config.yml")
-    #     report_narrative = llm.generate_report_narrative(data_summary)
-    #     # print(report_narrative)
-    #     logger.info(f"Generated narrative: {len(report_narrative)} characters")
-    #     # logger.debug(f"Narrative preview: {report_narrative[:200]}...")
-    # except Exception as e:
-    #     logger.error(f"LLM generation failed: {e}", exc_info=True)
-    #     sys.exit(1)
-    
-    # # STAGE 5: REPORT ASSEMBLY
-    # logger.info("STAGE 5: Building final report")
-    # try:
-    #     report_builder = ReportBuilder(output_dir="output")
+    if SYSARG == 'test':
+        print(data_summary)
+        print('\nNot generating report')
+    else:
+        # STAGE 4: LLM NARRATIVE GENERATION
+        logger.info("STAGE 4: Generating narrative with LLM")
+        try:
+            llm = LLMEngine(config_path="config/llm_config.yml")
+            report_narrative = llm.generate_report_narrative(data_summary)
+            # print(report_narrative)
+            logger.info(f"Generated narrative: {len(report_narrative)} characters")
+            # logger.debug(f"Narrative preview: {report_narrative[:200]}...")
+        except Exception as e:
+            logger.error(f"LLM generation failed: {e}", exc_info=True)
+            sys.exit(1)
         
-    #     # Prepare metadata
-    #     metadata = {
-    #         'generation_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-    #         'model': llm.model,
-    #         'data_source': config['data']['input_path'],
-    #         'total_records': len(df),
-    #         'validation_status': 'Passed' if validation_report['passed'] else 'Failed with warnings'
-    #     }
+        # STAGE 5: REPORT ASSEMBLY
+        logger.info("STAGE 5: Building final report")
+        try:
+            report_builder = ReportBuilder(output_dir="output")
+            
+            # Prepare metadata
+            metadata = {
+                'generation_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'model': llm.model,
+                'data_source': config['data']['input_path'],
+                'total_records': len(df),
+                'validation_status': 'Passed' if validation_report['passed'] else 'Failed with warnings'
+            }
+            
+            # Build HTML report
+            html_path = report_builder.build_html_report(
+                narrative=report_narrative,
+                plots=plots_dict,
+                metadata=metadata,
+                output_filename=Path(config['data']['output_path']).name
+            )
+            logger.info(f"HTML report saved to: {html_path}")
+            
+            # Also save raw markdown for version control
+            md_path = report_builder.save_markdown(
+                narrative=report_narrative,
+                output_filename="report.md"
+            )
+            logger.info(f"Markdown report saved to: {md_path}")
+            
+        except Exception as e:
+            logger.error(f"Report building failed: {e}", exc_info=True)
+            sys.exit(1)
         
-    #     # Build HTML report
-    #     html_path = report_builder.build_html_report(
-    #         narrative=report_narrative,
-    #         plots=plots_dict,
-    #         metadata=metadata,
-    #         output_filename=Path(config['data']['output_path']).name
-    #     )
-    #     logger.info(f"HTML report saved to: {html_path}")
+        # COMPLETION
+        logger.info("=" * 80)
+        logger.info("Pipeline completed successfully!")
+        logger.info(f"Final report: {html_path}")
+        logger.info("=" * 80)
         
-    #     # Also save raw markdown for version control
-    #     md_path = report_builder.save_markdown(
-    #         narrative=report_narrative,
-    #         output_filename="report.md"
-    #     )
-    #     logger.info(f"Markdown report saved to: {md_path}")
-        
-    # except Exception as e:
-    #     logger.error(f"Report building failed: {e}", exc_info=True)
-    #     sys.exit(1)
-    
-    # # COMPLETION
-    # logger.info("=" * 80)
-    # logger.info("Pipeline completed successfully!")
-    # logger.info(f"Final report: {html_path}")
-    # logger.info("=" * 80)
-    
-    # return html_path
+        return html_path
 
 
 if __name__ == "__main__":

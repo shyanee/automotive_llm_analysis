@@ -20,3 +20,6 @@ uv pip install -q -U google-genai
 
 # Create .env
 [ ! -f .env ] && echo "GOOGLE_API_KEY=" > .env || true
+
+# Create folders
+mkdir -p data output/logs output/plots

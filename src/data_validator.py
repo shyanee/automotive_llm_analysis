@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import List, Dict
 import logging
+from datetime import date
 
 class DataValidator:
     """Validates data quality and business logic constraints."""
@@ -45,8 +46,7 @@ class DataValidator:
                 report['warnings'].append(f"Found {len(invalid_years)} rows with unrealistic years")
         
         if 'price_usd' in df.columns:
-            # BMW prices typically range from 30k to 150k
-            outliers = df[(df['price_usd'] < 10000) | (df['price_usd'] > 500000)]
+            outliers = df[(df['price_usd'] < 10000) | (df['price_usd'] > 800000)]
             if len(outliers) > 0:
                 report['warnings'].append(
                     f"Found {len(outliers)} rows with unusual prices (< $10k or > $500k)"
@@ -96,8 +96,9 @@ class DataValidator:
         if 'sales_volume' in df.columns:
             df = df[df['sales_volume'] >= 0]
         
+        today_year = date.today().year
         if 'year' in df.columns:
-            df = df[(df['year'] >= 2000) & (df['year'] <= 2030)]
+            df = df[(df['year'] >= 1980) & (df['year'] <= today_year)]
         
         removed = original_len - len(df)
         if removed > 0:

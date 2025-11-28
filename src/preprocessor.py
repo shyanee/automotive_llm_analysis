@@ -97,7 +97,7 @@ class DataPreprocessor:
 
             if groupby_cols and all(col in df.columns for col in groupby_cols):
                 # Groupby and apply aggregation
-                grouped = df.groupby(groupby_cols)[column_name]
+                grouped = df.groupby(groupby_cols, observed=True)[column_name]
                 stats = grouped.agg(['mean', 'median', 'std', 'min', 'max', 'count']).to_dict('index')
                 return stats
             else:

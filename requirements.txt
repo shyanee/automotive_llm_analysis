@@ -1,23 +1,37 @@
-# Env
+# -----------------------------
+# python_version == '3.11.7'
+# -----------------------------
+
+# -----------------------------
+# Environment management
+# -----------------------------
 dotenv
 
-# Basic
+# -----------------------------
+# Core Dependencies
+# -----------------------------
 pandas
 openpyxl
 plotly
 scikit-learn
 
-# Formatting
+# -----------------------------
+# Formatting libraries
+# -----------------------------
 jinja2
 markdown
 pyyaml
 
-# LLM
+# -----------------------------
+# Language Models (LLM)
+# -----------------------------
 google-genai
 # llama-cpp-python
 # huggingface_hub
 
-# Tests
+# -----------------------------
+# Testing Dependencies
+# -----------------------------
 pytest
 pytest-mock
 pytest-cov

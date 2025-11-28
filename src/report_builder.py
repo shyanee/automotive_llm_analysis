@@ -1,75 +1,70 @@
-import os
 from datetime import datetime
 from pathlib import Path
+
 import markdown
+
 
 class ReportBuilder:
     """
     Builds professional HTML reports with embedded visualizations.
     Supports multiple output formats (HTML, PDF via weasyprint).
     """
-    
+
     def __init__(self, output_dir: str = "output"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        
+
     def build_html_report(
-        self, 
-        narrative: str, 
-        plots: dict, 
+        self,
+        narrative: str,
+        plots: dict,
         metadata: dict = None,
-        output_filename: str = "report.html"
+        output_filename: str = "report.html",
     ) -> str:
         """
         Combines LLM narrative with Plotly visualizations into a single HTML report.
-        
+
         Args:
             narrative: Markdown-formatted text from LLM
             plots: Dict of {plot_name: html_string} from Plotly
             metadata: Optional metadata (generation time, model, etc.)
             output_filename: Output file name
-            
+
         Returns:
             Path to generated report
         """
         # Convert markdown to HTML
         narrative_html = markdown.markdown(
-            narrative, 
-            extensions=['extra', 'codehilite', 'tables']
+            narrative, extensions=["extra", "codehilite", "tables"]
         )
-        
+
         # Build metadata section
         meta_html = self._build_metadata_section(metadata)
-        
+
         # Build plots section
         plots_html = self._build_plots_section(plots)
-        
+
         # Combine everything
-        full_html = self._build_full_html(
-            meta_html, 
-            narrative_html, 
-            plots_html
-        )
-        
+        full_html = self._build_full_html(meta_html, narrative_html, plots_html)
+
         # Save
         output_path = self.output_dir / output_filename
-        with open(output_path, 'w', encoding='utf-8') as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(full_html)
-        
+
         return str(output_path)
-    
+
     def _build_metadata_section(self, metadata: dict = None) -> str:
         """Generates metadata banner at top of report."""
         if not metadata:
             metadata = {}
-        
+
         generation_time = metadata.get(
-            'generation_time', 
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            "generation_time", datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
-        model = metadata.get('model', 'Unknown')
-        data_source = metadata.get('data_source', 'Unknown')
-        
+        model = metadata.get("model", "Unknown")
+        data_source = metadata.get("data_source", "Unknown")
+
         return f"""
         <div class="metadata">
             <p><strong>Report Generated:</strong> {generation_time}</p>
@@ -77,18 +72,20 @@ class ReportBuilder:
             <p><strong>Data Source:</strong> {data_source}</p>
         </div>
         """
-    
+
     def _build_plots_section(self, plots: dict) -> str:
         """Embeds all Plotly plots with proper spacing."""
         plots_html = '<div class="visualizations">\n<h2>📊 Data Visualizations</h2>\n'
-        
+
         for plot_name, plot_html in plots.items():
             plots_html += f'<div class="plot-container">\n{plot_html}\n</div>\n'
-        
-        plots_html += '</div>\n'
+
+        plots_html += "</div>\n"
         return plots_html
-    
-    def _build_full_html(self, meta_html: str, narrative_html: str, plots_html: str) -> str:
+
+    def _build_full_html(
+        self, meta_html: str, narrative_html: str, plots_html: str
+    ) -> str:
         """Assembles complete HTML document with styling."""
         return f"""
 <!DOCTYPE html>
@@ -236,11 +233,11 @@ class ReportBuilder:
     </div>
 </body>
 </html>
-        """
-    
+        """  # noqa: E501
+
     def save_markdown(self, narrative: str, output_filename: str = "report.md") -> str:
         """Saves raw markdown for version control or alternative rendering."""
         output_path = self.output_dir / output_filename
-        with open(output_path, 'w', encoding='utf-8') as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(narrative)
         return str(output_path)

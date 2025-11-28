@@ -1,4 +1,4 @@
-.PHONY: install test clean run lint format
+.PHONY: install test clean run format lint
 
 install:
 	bash ./runme.sh
@@ -14,10 +14,10 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name '*.pyc' -delete
 
-lint:
-	flake8 src/ tests/
-	mypy src/
-
 format:
 	black src/ tests/
 	isort src/ tests/
+
+lint:
+	flake8 src/ tests/
+	mypy src/

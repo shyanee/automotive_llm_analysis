@@ -31,10 +31,7 @@ jobs:
     - name: Install dependencies
       run: |
         make install
-
-    # - name: Install dependencies
-    #   run: |
-    #     bash ./runme.sh
+      # bash ./runme.sh
 
     - name: Run tests
       run: |
@@ -42,10 +39,10 @@ jobs:
         make test
 
     # Optional: Linting and formatting checks
-    - name: Lint code
-      run: |
-        make lint
-
     - name: Check code formatting
       run: |
         make format
+    
+    - name: Lint code
+      run: |
+        make lint

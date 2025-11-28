@@ -35,10 +35,3 @@ google-genai
 pytest
 pytest-mock
 pytest-cov
-
-# -----------------------------
-# Formatting and linting tools
-# -----------------------------
-black
-isort
-flake8

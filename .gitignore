@@ -1,9 +1,20 @@
+# System
 .env
 .DS_Store
 .vscode
 __pycache__
-
 venv/
+
+# Unit-test
+.pytest_cache
+.coverage
+mock_data/
+
+# Data
 data/
-output/
 models/
+
+# Outputs
+archive/
+logs/
+plots/

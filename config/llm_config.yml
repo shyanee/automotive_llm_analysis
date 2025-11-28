@@ -1,6 +1,6 @@
 llm:
   model: "gemini-2.5-pro" # gemini-2.5-flash
-  temperature: 0.75
+  temperature: 0.8
   max_output_tokens: 5500 # [3000,8000]
   
 prompts:
@@ -88,10 +88,12 @@ prompts:
     * Use clear, non-technical language where possible, and support all claims with specific data references (e.g., specific models, regions, or growth percentages).
 
     1. **Introduction/Executive Summary**
-      * A general overview of the data given **tying it back to events happening in the world at that period**
-      
-      Example: "This report analyzes automotive sales from Q1 2022 to Q4 2024. The period was marked by key global events, \
-      including persistent supply-chain constraints and the rapid expansion of EV infrastructure. Preliminary analysis shows..."
+      * **MANDATORY**: Begin by explicitly stating the **actual time period/range** (e.g., Q1 2023 - Q4 2024) covered by the analyzed data.
+      * Provide a general overview of the data given, **tying it back to events happening in the world at that period**.
+
+      Example of desired output structure: "**This report analyzes automotive sales from [Actual Start Date] to [Actual End Date].** \
+      The period was marked by key global events, \including persistent supply-chain constraints and the rapid expansion of EV infrastructure. \
+      Preliminary analysis shows..."
 
     2.  **Sales Performance Trend Over Time:**
         * **Identify and describe the overall global sales trend** by year.
@@ -100,7 +102,8 @@ prompts:
     3.  **Performance Analysis of Models and Markets:**
         * **Highlight the Top 5 best-selling Models** globally (by total units sold).
         * **Identify the single Model-Region combination** with the highest average selling price (ASP).
-        * **Identify the Market Segment (e.g., SUV, Sedan, Truck)** that is the most underperforming in terms of sales volume growth over the last two years.
+        * **Identify the Market Segment (e.g., SUV, Sedan, Truck)** that is the most underperforming in terms of sales volume growth over the last two years. \
+        ***(NOTE: If Market Segment data is missing, use [Segmentation assigned via Web Search] and label the finding accordingly.)***
     
         Example: "Top 5 Models: The **'Model X'** led with **550,000 units**, \
         followed by **'Truck Y'** (480,000 units). The **Sedan** segment was the most underperforming, \
@@ -120,6 +123,40 @@ prompts:
 
         Example: "Insight: **Pricing Strategy:** The **Luxury Sedan Model Alpha** in the **Middle East** region commands an ASP 35% higher than the global average, \
         despite low volume, suggesting a highly inelastic, niche luxury market for this specific vehicle."
+
+    **Chart Commentary**
+
+    I have generated four (4) charts/figures below. Please provide a detailed commentary for each chart (refer to each chart by number, e.g., fig 1, fig 2, etc.). Your commentary should:
+
+    - **Describe** the chart, focusing on key trends, distributions, patterns, and any noticeable outliers.
+    - **Explain why** these trends or distributions might exist, considering factors such as market trends, consumer preferences, seasonality, etc.
+    - **Use web search** to **support** insights or provide additional context where necessary. Web search can be used to back up trends or compare the data with industry benchmarks or similar reports.
+    - **Compare** data across different charts if relevant. For example, do regional performance trends (fig 1) correlate with sales volume by fuel type (fig 2)?
+    
+    - Use **contextual reasoning** to explain trends. For example, if regional sales are growing in a particular country, think about potential **economic factors**, **market trends**, or **consumer behavior** that might be contributing to this growth.
+    - If the model identifies a **correlation** or **pattern**, suggest possible **causal relationships** (e.g., higher fuel prices leading to lower sales in certain regions).
+    - **Backup** any claims or insights with data from **web search**, especially if there are specific market trends or external factors you are unsure of.
+    
+    * Charts
+    1. **Sales Trends: Regional Performance Overlaid with Global Trend (Units)**  
+      * **Chart Type**: Line chart  
+      * **Description**: This chart shows regional sales performance overlaid with the global trend. Each region's sales trend is shown over multiple years, alongside the overall global sales trend.  
+      * **Commentary Focus**: Identify which regions show the strongest performance compared to the global trend. Are there regions underperforming globally, or regions where sales are rapidly growing? Consider the possible reasons behind these trends, such as market growth, regional economic factors, or industry shifts.
+
+    2. **Top 10 Models: Sales Volume Composition by Fuel Type**  
+      * **Chart Type**: Bar chart  
+      * **Description**: This chart displays the sales volume of the top 10 models by fuel type, faceted by year and colored by fuel type. The x-axis represents the model, and the y-axis shows the sales volume.  
+      * **Commentary Focus**: Which fuel types dominate the top 10 models? Are there any clear shifts in consumer preferences over the years? Consider external factors like fuel efficiency trends, environmental concerns, or government incentives for specific fuel types.
+
+    3. **Price vs. Sales Volume: Model Market Position (Aggregated by Fuel/Transmission)**  
+      * **Chart Type**: Scatter plot  
+      * **Description**: This scatter plot compares the price (x-axis) and sales volume (y-axis) for different models, aggregated by fuel type and color-coded by transmission type.  
+      * **Commentary Focus**: Look for any patterns or correlations between price and sales volume. Are higher-priced models generally selling less, or are there exceptions? Do specific transmission types or fuel types have an impact on price sensitivity and sales volume?
+
+    4. **Price Distribution by Binned Engine Size and Fuel Type**  
+      * **Chart Type**: Box plot  
+      * **Description**: This box plot shows the price distribution (y-axis) for different binned engine sizes (x-axis), with color representing the fuel type.  
+      * **Commentary Focus**: Examine how engine size and fuel type affect the price distribution. Do larger engine sizes tend to have higher prices? How does fuel type affect the price range for each engine size? Consider factors like engine performance, production costs, and consumer demand.
 
     ***INFERENCE & WEB SEARCH POLICY (CRITICAL OVERRIDE):***
     The internal dataset may be incomplete for certain calculations (e.g., missing yearly regional sales, market segmentation, or detailed ASPs).

@@ -24,9 +24,13 @@ jobs:
     - name: Install make (if not already available)
       run: sudo apt-get install make
 
+    # - name: Install dependencies
+    #   run: |
+    #     make install
+
     - name: Install dependencies
       run: |
-        make install
+        bash ./runme.sh
 
     - name: Run tests
       run: |

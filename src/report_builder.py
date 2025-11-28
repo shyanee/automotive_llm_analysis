@@ -220,7 +220,7 @@ class ReportBuilder:
 </head>
 <body>
     <div class="container">
-        <h1>🚗 Automated Business Intelligence Report</h1>
+        <h1>Automated Business Intelligence Report</h1>
         
         {meta_html}
         

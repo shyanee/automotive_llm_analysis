@@ -17,7 +17,7 @@ class Visualizer:
         """
         plots = {}
 
-        # 1. Global Sales Trend over Time (Original, but useful for overall performance)
+        # 1. Global Sales Trend over Time
         # Goal: Identify and describe sales performance trend over time
         regional_yearly = self.df.groupby(['year', 'region'])['sales_volume'].sum().reset_index()
 

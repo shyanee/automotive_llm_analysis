@@ -1,7 +1,7 @@
 .PHONY: install test clean run lint format
 
 install:
-	./runme.sh
+	bash ./runme.sh
 
 test:
 	python -m pytest tests/ -v --cov=src

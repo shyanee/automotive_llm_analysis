@@ -1,16 +1,23 @@
+# Env
 dotenv
 
+# Basic
 pandas
 openpyxl
 plotly
 scikit-learn
 
+# Formatting
 jinja2
 markdown
 pyyaml
 
-google-genai
-
 # LLM
+google-genai
 # llama-cpp-python
 # huggingface_hub
+
+# Tests
+pytest
+pytest-mock
+pytest-cov

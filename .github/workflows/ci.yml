@@ -28,6 +28,10 @@ jobs:
     - name: Install make (if not already available)
       run: sudo apt-get install make
 
+    - name: Install formatting and linting tools
+      run: |
+        pip install black isort flake8
+
     - name: Install dependencies
       run: |
         make install

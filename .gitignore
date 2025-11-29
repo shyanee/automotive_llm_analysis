@@ -7,7 +7,7 @@ venv/
 
 # Unit-test
 .pytest_cache
-.coverage
+.coverage*
 mock_data/
 
 # Data

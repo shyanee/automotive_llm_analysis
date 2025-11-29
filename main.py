@@ -90,6 +90,12 @@ def main():
         viz = Visualizer(df)
         plots_dict = viz.generate_plots()
         logger.info(f"Generated {len(plots_dict)} visualizations")
+        # Update data_summary
+        data_summary += (
+            "\n\n--- JSON DATA FOR CHART ANALYSIS ---\n"
+            "price_elasticity_scatter_json:\n"
+            f"{plots_dict['price_elasticity_scatter_json']}"
+        )
     except Exception as e:
         logger.error(f"Visualization generation failed: {e}", exc_info=True)
         sys.exit(1)

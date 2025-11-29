@@ -1,5 +1,6 @@
 import os
 
+# from typing import List
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
@@ -34,7 +35,12 @@ class Visualizer:
         # Combine the two datasets
         combined_yearly = pd.concat([regional_yearly, global_yearly], ignore_index=True)
 
-        # Define custom order and style for the plot
+        # Convert to json
+        # combined_sales_trend_line_json = combined_yearly.to_json(
+        #     orient="records", lines=False
+        # )
+        # print(f'combined_yearly: {combined_sales_trend_line_json}')
+
         # Ensure 'Global' appears last in the legend (and potentially has a distinct color)
         region_order = combined_yearly["region"].unique().tolist()
         if "Global" in region_order:
@@ -53,7 +59,7 @@ class Visualizer:
             x="year",
             y="sales_volume",
             color="region",
-            title="Sales Trends: Regional Performance Overlaid with Global Trend (Units)",
+            title="1. Sales Trends: Regional Performance Overlaid with Global Trend (Units)",
             markers=True,
             labels={"sales_volume": "Sales Volume"},
             category_orders={"region": region_order},
@@ -66,10 +72,10 @@ class Visualizer:
                 # Find the trace for the 'Global' trend
                 trace.update(line=dict(width=3, dash="dash"))
 
-        plots["combined_trend_plot"] = pio.to_html(
+        plots["combined_sales_trend_line_plot"] = pio.to_html(
             fig1, full_html=False, include_plotlyjs="cdn"
         )
-        self._write_html(fig1, "combined_trend_plot")
+        self._write_html(fig1, "combined_sales_trend_line_plot")
 
         # 2. Top Models Sales Breakdown (New: Model Performance)
         # Goal: Highlight top-performing and underperforming models
@@ -83,16 +89,22 @@ class Visualizer:
             .sum()
             .reset_index()
         )
+        # Convert to json
+        # top_models_sales_bar_json = model_fuel_sales_yearly.to_json(
+        #     orient="records", lines=False
+        # )
+        # print(f'model_fuel_sales_yearly:{top_models_sales_bar_json}')
         model_order = (
             self.df.groupby("model")["sales_volume"].sum().nlargest(10).index.tolist()
         )
+
         fig2 = px.bar(
             model_fuel_sales_yearly,
             x="model",
             y="sales_volume",
             color="fuel_type",
             facet_col="year",
-            title="Top 10 Models: Sales Volume Composition by Fuel Type",
+            title="2. Top 10 Models: Sales Volume Composition by Fuel Type",
             labels={
                 "sales_volume": "Total Sales Volume (Units)",
                 "fuel_type": "Fuel Type",
@@ -104,14 +116,13 @@ class Visualizer:
             barmode="stack",
             xaxis={"categoryorder": "array", "categoryarray": model_order},
         )
-        plots["top_models_plot"] = pio.to_html(
+        plots["top_models_sales_bar_plot"] = pio.to_html(
             fig2, full_html=False, include_plotlyjs=False
         )
-        self._write_html(fig2, "top_models_plot")
+        self._write_html(fig2, "top_models_sales_bar_plot")
 
-        # 3. Price Elasticity / Sales Driver (Scatter Plot, Modified for Clarity)
-        # Goal: Explore key drivers of sales (price, market segment)
-        # Use mileage bin as an interesting categorical variable
+        # 3. Price Elasticity / Sales Driver (Scatter Plot)
+        # key drivers of sales (price, market segment)
         group_cols = ["transmission", "fuel_type"]  # model
         df_agg = (
             self.df.groupby(group_cols)
@@ -126,6 +137,9 @@ class Visualizer:
             .reset_index()
             .dropna()
         )
+        price_elasticity_json = df_agg.to_json(orient="records", lines=False)
+        # print(f'price_elasticity: {price_elasticity_json}')
+
         fig3 = px.scatter(
             df_agg,
             x="avg_price_usd",
@@ -134,10 +148,8 @@ class Visualizer:
             facet_col="fuel_type",  # Split into columns by fuel type
             size="total_sales_volume",  # Size now reflects sales volume (or use avg_engine_size)
             size_max=45,  # Adjust max size slightly for clarity
-            hover_data=[
-                "avg_engine_size"
-            ],  # Show model and engine size on hover # model
-            title="Price vs. Sales Volume: Model Market Position (Aggregated by Fuel/Trans)",
+            hover_data=["avg_engine_size"],
+            title="3. Price vs. Sales Volume: Model Market Position (Aggregated by Fuel/Trans)",
             labels={
                 "avg_price_usd": "Average Price (USD)",
                 "total_sales_volume": "Total Sales Volume (Units)",
@@ -149,22 +161,26 @@ class Visualizer:
         fig3.for_each_annotation(
             lambda a: a.update(text=a.text.replace("fuel_type=", ""))
         )
-        plots["price_elasticity_plot"] = pio.to_html(
+        plots["price_elasticity_scatter_plot"] = pio.to_html(
             fig3, full_html=False, include_plotlyjs=False
         )
-        self._write_html(fig3, "price_elasticity_plot")
+        plots["price_elasticity_scatter_json"] = price_elasticity_json
+        self._write_html(fig3, "price_elasticity_scatter_plot")
 
-        # 4. Engine Size vs. Price by Fuel Type (New: Creative Insight - Premiumization/Market Segment)
-        # Goal: Include 1-2 additional insights (Engine Size/Fuel as proxy for performance/premium segment)
+        # 4. Engine Size vs. Price by Fuel Type (Creative Insight - Premiumization/Market Segment)
         df_clean_eng = self.df.dropna(
             subset=["engine_size_l", "price_usd", "fuel_type"]
         )
+        # Convert to json
+        # engine_price_box_json = df_clean_eng.to_json(orient="records", lines=False)
+        # print(f'engine_price_box: {engine_price_box_json}')
+
         fig4 = px.box(
             df_clean_eng,
             x="engine_size",
             y="price_usd",
             color="fuel_type",
-            title="Price Distribution by Binned Engine Size and Fuel Type",
+            title="4. Price Distribution by Binned Engine Size and Fuel Type",
             labels={
                 "engine_size": "Engine Size (L, Binned)",
                 "price_usd": "Price (USD)",
@@ -173,10 +189,10 @@ class Visualizer:
                 "engine_size": sorted(df_clean_eng["engine_size"].unique().tolist())
             },
         )
-        plots["engine_price_box"] = pio.to_html(
+        plots["engine_price_box_plot"] = pio.to_html(
             fig4, full_html=False, include_plotlyjs=False
         )
-        self._write_html(fig4, "engine_price_box")
+        self._write_html(fig4, "engine_price_box_plot")
 
         return plots
 

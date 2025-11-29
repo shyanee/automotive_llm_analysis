@@ -37,10 +37,10 @@ def test_generate_plots(visualizer):
 
     # Assert that the plots dictionary contains all the required keys
     expected_plot_keys = [
-        "combined_trend_plot",
-        "top_models_plot",
-        "price_elasticity_plot",
-        "engine_price_box",
+        "combined_sales_trend_line_plot",
+        "top_models_sales_bar_plot",
+        "price_elasticity_scatter_plot",
+        "engine_price_box_plot",
     ]
     for plot_key in expected_plot_keys:
         assert plot_key in plots, f"Missing plot: {plot_key}"

@@ -5,6 +5,7 @@ install:
 
 test:
 	python -m pytest tests/ -v --cov=src
+	rm -rf .coverage
 
 run:
 	python main.py

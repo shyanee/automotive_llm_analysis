@@ -188,7 +188,7 @@ class DataPreprocessor:
             return results
 
         # ----------------------------------------------------
-        # 1. Overall Metrics & Trend Analysis (No Change)
+        # 1. Overall Metrics & Trend Analysis
         # ----------------------------------------------------
         total_revenue = (df["sales_volume"] * df["price_usd"]).sum()
         total_sales = df["sales_volume"].sum()
@@ -234,7 +234,7 @@ class DataPreprocessor:
         )
 
         # ----------------------------------------------------
-        # 2. Regional Insights (No Change)
+        # 2. Regional Insights
         # ----------------------------------------------------
         region_sales = (
             df.groupby("region")["sales_volume"].sum().sort_values(ascending=False)
@@ -271,14 +271,14 @@ class DataPreprocessor:
         regional_price_stats = _get_column_stats(df, "price_usd", ["region"])
 
         # ----------------------------------------------------
-        # 3. Numerical Variable Statistics (No Change)
+        # 3. Numerical Variable Statistics
         # ----------------------------------------------------
         price_stats = _get_column_stats(df, "price_usd")
         mileage_stats = _get_column_stats(df, "mileage_km")
         engine_stats = _get_column_stats(df, "engine_size_l")
 
         # ----------------------------------------------------
-        # 4. Temporal and Categorical Insights (ENHANCED)
+        # 4. Temporal and Categorical Insights
         # ----------------------------------------------------
         model_trends = _get_time_series_trends(df, "model", n_top=3)
         fuel_trends = _get_time_series_trends(df, "fuel_type", n_top=4)
